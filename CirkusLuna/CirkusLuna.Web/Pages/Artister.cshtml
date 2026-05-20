@@ -1,0 +1,24 @@
+@page
+@model ArtisterModel
+@{
+    ViewData["Title"] = "Artister";
+}
+
+<h1>Vores Artister</h1>
+<p class="lead">Mød de talentfulde artister fra Cirkus Luna</p>
+
+<div class="row">
+    @foreach (var artist in Model.Artister)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card performance-card h-100">
+                <div class="card-body text-center">
+                    <h5 class="card-title">@artist.Navn</h5>
+                    <p class="card-text">
+                        <span class="badge bg-burgundy">@artist.Specialitet</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    }
+</div>

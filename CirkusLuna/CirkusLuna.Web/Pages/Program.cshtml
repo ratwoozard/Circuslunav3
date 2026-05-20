@@ -1,0 +1,55 @@
+@page
+@model ProgramModel
+@{
+    ViewData["Title"] = "Forestillinger";
+}
+
+<h1>Forestillinger</h1>
+
+<form method="get" class="mb-4">
+    <div class="row">
+        <div class="col-md-4">
+            <input type="text" name="search" class="form-control" placeholder="Søg efter by..." value="@Model.Search" />
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary">Søg</button>
+        </div>
+    </div>
+</form>
+
+@if (Model.Forestillinger.Count == 0)
+{
+    <div class="alert alert-info">
+        Ingen forestillinger fundet.
+    </div>
+}
+else
+{
+    <div class="row">
+        @foreach (var forestilling in Model.Forestillinger)
+        {
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card performance-card h-100">
+                    <div class="card-header">
+                        <h5 class="mb-0">@forestilling.Titel</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>
+                            <strong>Dato:</strong> @forestilling.Dato.ToString("d. MMMM yyyy")<br/>
+                            <strong>Tid:</strong> @forestilling.Tidspunkt.ToString(@"hh\:mm")<br/>
+                            <strong>By:</strong> @forestilling.By?.Navn
+                        </p>
+                        <p>
+                            <span class="badge bg-success">@forestilling.LedigePladser ledige</span>
+                            <span class="badge badge-vip">@forestilling.LedigeVIPPladser VIP</span>
+                        </p>
+                    </div>
+                    <div class="card-footer">
+                        <a asp-page="/Detaljer" asp-route-id="@forestilling.Id" class="btn btn-outline-primary btn-sm">Detaljer</a>
+                        <a asp-page="/Reserver" asp-route-id="@forestilling.Id" class="btn btn-primary btn-sm">Reserver</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

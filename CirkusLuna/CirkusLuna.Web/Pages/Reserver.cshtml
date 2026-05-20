@@ -1,0 +1,102 @@
+@page "{id:int}"
+@model ReserverModel
+@{
+    ViewData["Title"] = "Reserver Billetter";
+}
+
+@if (Model.Forestilling == null)
+{
+    <div class="alert alert-danger">Forestilling ikke fundet.</div>
+}
+else
+{
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-page="/Program">Forestillinger</a></li>
+            <li class="breadcrumb-item"><a asp-page="/Detaljer" asp-route-id="@Model.Forestilling.Id">@Model.Forestilling.Titel</a></li>
+            <li class="breadcrumb-item active">Reserver</li>
+        </ol>
+    </nav>
+
+    <h1>Reserver billetter</h1>
+    <h4 class="text-muted">@Model.Forestilling.Titel - @Model.Forestilling.Dato.ToString("d. MMMM yyyy")</h4>
+
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="alert alert-danger">@Model.ErrorMessage</div>
+    }
+
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Reservationsformular</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        <div class="mb-3">
+                            <label class="form-label">Navn</label>
+                            <input type="text" name="KundeNavn" class="form-control" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" name="KundeEmail" class="form-control" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Telefon</label>
+                            <input type="tel" name="KundeTelefon" class="form-control" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Billettype</label>
+                            <select name="Billettype" class="form-select" required>
+                                <option value="0">Normal (120 DKK)</option>
+                                <option value="1">Barn (80 DKK)</option>
+                                <option value="2">VIP (250 DKK)</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Antal billetter</label>
+                            <input type="number" name="AntalBilletter" class="form-control" min="1" max="10" value="1" required />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Reserver</button>
+                        <a asp-page="/Program" class="btn btn-outline-secondary">Annuller</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Priser</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <tr>
+                            <td>Normal</td>
+                            <td class="text-end">120 DKK</td>
+                        </tr>
+                        <tr>
+                            <td>Barn (under 12 år)</td>
+                            <td class="text-end">80 DKK</td>
+                        </tr>
+                        <tr>
+                            <td>VIP</td>
+                            <td class="text-end">250 DKK</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5>Ledige pladser</h5>
+                </div>
+                <div class="card-body">
+                    <p>
+                        <strong>Normal:</strong> @Model.Forestilling.LedigePladser ledige<br/>
+                        <strong>VIP:</strong> @Model.Forestilling.LedigeVIPPladser ledige
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+}

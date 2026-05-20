@@ -1,0 +1,486 @@
+# Cirkus Luna Project Constitution
+
+**Project Type:** Danish 1st Semester Computer Science Assignment  
+**Institution:** UCL Erhvervsakademi og Professionshøjskole  
+**Technology Stack:** C#, ASP.NET Core Razor Pages, Visual Studio  
+**Exam Focus:** Programmable core logic in Class Library + Console App demonstration
+
+---
+
+## Purpose
+
+This constitution protects the Cirkus Luna project from scope creep, inappropriate technology choices, and violations of assignment requirements. It serves as the single source of truth for architectural decisions and technology constraints.
+
+---
+
+## Core Principles
+
+### 1. Assignment Requirements First
+
+The project **must** follow the provided assignment PDFs before any design ambition or technical preference. If there is a conflict between a modern web trend and the assignment, **the assignment wins**.
+
+**Rule:** All features, architecture decisions, and technology choices must be validated against the assignment documents located in `docs/input/`.
+
+---
+
+### 2. Required Technology Stack
+
+The system **must** be built with:
+
+- **Language:** C#
+- **IDE:** Visual Studio
+- **Web Framework:** ASP.NET Core Razor Pages
+- **Project Types:** Class Library + Console App + Razor Pages Web App
+- **Deployment Target:** Local Windows PC (exam environment)
+
+**Final deliverables:**
+- A runnable Razor Pages web application
+- A Console App that demonstrates and tests core functionality
+
+---
+
+### 3. Forbidden Technologies
+
+The following technologies are **strictly prohibited** as they are outside the assignment scope:
+
+- ❌ Next.js
+- ❌ React / Vue / Angular
+- ❌ TypeScript
+- ❌ Tailwind CSS (use Bootstrap + custom CSS)
+- ❌ Supabase
+- ❌ Vercel
+- ❌ shadcn/ui
+- ❌ Node.js backend
+- ❌ Docker / containerization
+- ❌ Microservices architecture
+- ❌ API-first / REST API architecture
+- ❌ Entity Framework (unless explicitly allowed later)
+- ❌ Complex ORMs or database frameworks
+
+**Why:** These are enterprise/modern web technologies that are beyond the scope of a 1st semester educational project and would obscure the exam-relevant programming skills.
+
+---
+
+### 4. Three-Project Solution Structure
+
+The Visual Studio solution **must** contain exactly three projects:
+
+```
+CirkusLuna.sln
+├── CirkusLuna.Core/          (Class Library - exam focus)
+│   ├── Models/
+│   ├── Repositories/
+│   ├── Services/
+│   ├── Interfaces/
+│   ├── Exceptions/
+│   └── Validation/
+│
+├── CirkusLuna.ConsoleApp/    (Console App - demonstration)
+│   └── Program.cs
+│
+└── CirkusLuna.Web/           (ASP.NET Core Razor Pages)
+    ├── Pages/
+    ├── wwwroot/
+    └── Program.cs
+```
+
+**Rule:** Do not create additional projects, modules, or split the architecture further.
+
+---
+
+### 5. Clear Layer Separation
+
+The application **must** be divided into three layers:
+
+#### **UI Layer**
+- Razor Pages (`.cshtml` + `.cshtml.cs`)
+- Console App (`Program.cs`)
+- **Responsibility:** User interaction, input/output, display logic only
+
+#### **Service Layer**
+- Business logic classes
+- Validation logic
+- Domain rules (e.g., capacity checks, VIP rules, reservation rules)
+- **Responsibility:** Orchestration and business rules
+
+#### **Repository Layer**
+- Data access classes
+- CRUD operations
+- Search and filtering algorithms
+- **Responsibility:** Data management and retrieval
+
+**Rule:** Business rules **must not** be placed directly in Razor Pages. Razor Pages should only call services and display results.
+
+---
+
+### 6. Core Library Focus
+
+The **most important exam-relevant code** must be placed in `CirkusLuna.Core`.
+
+This includes:
+- ✅ Domain models (`Forestilling`, `Lokation`, `Reservation`, etc.)
+- ✅ Repository interfaces (`IForestillingRepository`, `ILokationRepository`)
+- ✅ Repository implementations with self-written algorithms
+- ✅ Service classes with business logic
+- ✅ Custom exceptions (`ReservationFullException`, `InvalidVIPException`, etc.)
+- ✅ Validation classes
+
+**Why:** The exam evaluates the student's ability to write object-oriented, maintainable C# code. The Class Library is where this is demonstrated.
+
+---
+
+### 7. Console App Must Be Useful
+
+The Console App is **not** a throwaway project. Because the exam focuses on the programmable parts rather than the Razor Pages UI, the Console App **must** be able to demonstrate and test the core system.
+
+**Required Console App features:**
+- ✅ Search for shows by city, date, or criteria
+- ✅ Display shows sorted alphabetically by city
+- ✅ Create reservations (regular and VIP)
+- ✅ Check capacity and availability
+- ✅ Validate VIP eligibility
+- ✅ Handle exceptions and display error messages
+- ✅ Menu-driven interface for testing all core features
+
+**Why:** This allows the examiner to see the core logic in action without relying on the web UI.
+
+---
+
+### 8. Simple and Explainable Architecture
+
+The solution **must** be realistic for a 1st semester project.
+
+**Prefer:**
+- ✅ Clear class names (`ForestillingService`, `ReservationRepository`)
+- ✅ Simple interfaces (`IRepository<T>`)
+- ✅ In-memory lists for data storage
+- ✅ Understandable method names (`FindShowsByCity`, `ValidateVIPStatus`)
+- ✅ Basic validation with exceptions
+
+**Avoid:**
+- ❌ Dependency injection containers (use constructor injection manually)
+- ❌ Advanced design patterns (Mediator, CQRS, Event Sourcing)
+- ❌ Reflection or metaprogramming
+- ❌ Complex LINQ expressions that are hard to explain
+- ❌ Abstract factory patterns or builder patterns
+
+**Rule:** Every group member must be able to explain the code they wrote. If it requires a 10-minute explanation, it's too complex.
+
+---
+
+### 9. Data Strategy
+
+**Default approach:** Use in-memory repositories with seed data.
+
+```csharp
+public class InMemoryForestillingRepository : IForestillingRepository
+{
+    private List<Forestilling> _forestillinger = new();
+    
+    public InMemoryForestillingRepository()
+    {
+        SeedData();
+    }
+    
+    private void SeedData()
+    {
+        // Populate with example data
+    }
+}
+```
+
+**Alternative (if beneficial):** Simple JSON file storage.
+
+**Prohibited (unless explicitly required later):**
+- ❌ SQL databases (SQL Server, PostgreSQL, MySQL)
+- ❌ Entity Framework or Dapper
+- ❌ Cloud databases
+
+**Why:** A database adds complexity and deployment dependencies. In-memory data is sufficient for demonstrating the required programming skills.
+
+---
+
+### 10. Required Self-Written Algorithms
+
+The project **must** include the following self-written algorithms:
+
+#### **A. Search/Filtering Algorithm (in Repository)**
+
+Example:
+```csharp
+public List<Forestilling> SearchByCity(string city)
+{
+    List<Forestilling> results = new();
+    foreach (var show in _forestillinger)
+    {
+        if (show.Lokation.By.Equals(city, StringComparison.OrdinalIgnoreCase))
+        {
+            results.Add(show);
+        }
+    }
+    return results;
+}
+```
+
+**Rule:** Do not use only LINQ `.Where()`. Write at least one manual loop-based search to demonstrate algorithmic thinking.
+
+#### **B. Alphabetical Sorting Algorithm**
+
+Example:
+```csharp
+public List<string> GetCitiesSortedAlphabetically()
+{
+    List<string> cities = GetAllCities();
+    
+    // Bubble sort implementation
+    for (int i = 0; i < cities.Count - 1; i++)
+    {
+        for (int j = 0; j < cities.Count - i - 1; j++)
+        {
+            if (string.Compare(cities[j], cities[j + 1]) > 0)
+            {
+                string temp = cities[j];
+                cities[j] = cities[j + 1];
+                cities[j + 1] = temp;
+            }
+        }
+    }
+    
+    return cities;
+}
+```
+
+**Rule:** Implement a self-written sorting algorithm (bubble sort, selection sort, or insertion sort). Do not rely solely on `.OrderBy()` or `.Sort()`.
+
+**Why:** The assignment explicitly requires demonstration of basic algorithm implementation skills.
+
+---
+
+### 11. Documentation and Scrum
+
+The project **must** support the following documentation artifacts:
+
+#### **Scrum Documentation**
+- ✅ Product Backlog (prioritized list of features)
+- ✅ User Stories with Acceptance Criteria
+- ✅ Sprint planning artifacts
+
+#### **UML Diagrams**
+- ✅ **Domain Model** (conceptual model of the domain)
+- ✅ **Class Diagram** (focused on `CirkusLuna.Core` classes)
+- ✅ **Sequence Diagram** (e.g., reservation flow)
+
+**Rule:** UML diagrams should focus on the Class Library (`CirkusLuna.Core`), not the Razor Pages.
+
+**Suggested tools:**
+- PlantUML (code-based UML)
+- Draw.io
+- Visual Paradigm
+- Lucidchart
+
+**Location:** Store documentation in `docs/uml/` and `docs/scrum/`.
+
+---
+
+### 12. Design Quality Without Overengineering
+
+The web UI should be clean, polished, and **visually inspired** by the design reference in `docs/input/design-reference.png`, but it must remain a **realistic 1st semester C# / Razor Pages assignment**.
+
+**CRITICAL:** Do not turn this into a marketing-heavy SaaS website. The design reference guides visual style only, not complexity.
+
+#### **Allowed Visual Elements:**
+
+- ✅ Dark red / burgundy circus atmosphere (background colors)
+- ✅ Warm yellow or gold buttons (`#F4C542` or similar)
+- ✅ Cream / ivory content surfaces for cards and sections
+- ✅ Simple cards for performances with clear date badges
+- ✅ Clean navigation with Danish labels
+- ✅ Bootstrap 5 for responsive layout
+- ✅ Custom CSS in `wwwroot/css/site.css` for theming
+- ✅ Simple festive border (optional red/white/yellow striped decoration)
+
+#### **Required Danish Labels:**
+
+Use Danish throughout the UI:
+- "Se turnéplan" (View tour schedule)
+- "Reserver billet" (Reserve ticket)
+- "Forestillinger" (Performances)
+- "Artister" (Artists)
+- "Reservationer" (Reservations)
+- "Ledige pladser" (Available seats)
+- "VIP-pladser" (VIP seats)
+- "Søg forestillinger" (Search performances)
+- "By" (City)
+- "Dato" (Date)
+- "Kapacitet" (Capacity)
+
+#### **Statistics Must Be Real:**
+
+If the UI displays statistics (e.g., "8 byer", "13 forestillinger"), they **must** be calculated from the seeded data in `CirkusLuna.Core`, not hardcoded marketing numbers.
+
+Example:
+```csharp
+// In a Razor Page or service
+int totalCities = _forestillingService.GetUniqueCities().Count;
+int totalShows = _forestillingService.GetAllForestillinger().Count;
+```
+
+**Prohibited:** Fake statistics, placeholder numbers, or "impressive-looking" metrics that don't reflect the actual data.
+
+#### **Strictly Avoid:**
+
+- ❌ Overly polished startup-style hero sections with buzzwords
+- ❌ Advanced animations, parallax effects, or JavaScript-heavy UI
+- ❌ "AI-generated" marketing copy with generic praise
+- ❌ Complex dashboard UI with charts and graphs (unless required by assignment)
+- ❌ Generic AI-looking UI with bland gradients
+- ❌ Enterprise SaaS aesthetics
+- ❌ Complicated component libraries beyond Bootstrap
+- ❌ Anything that makes the code harder to explain at exam
+
+#### **Design Priority:**
+
+The visual design is **secondary** to the programmable core. The most important deliverables are:
+
+1. `CirkusLuna.Core` Class Library with business logic
+2. `CirkusLuna.ConsoleApp` Console App demonstration
+3. `CirkusLuna.Web` ASP.NET Core Razor Pages (functional UI)
+4. Repository layer with self-written algorithms
+5. Service layer with business rules
+6. Search/filtering functionality
+7. Self-written alphabetical city sorting
+8. Reservation rules and validation
+9. Exception handling
+10. Documentation, Scrum artifacts, and UML diagrams
+
+**Rule:** If choosing between a polished UI feature and a well-implemented core algorithm, always prioritize the core algorithm. The UI should be clean and functional, not a showpiece.
+
+---
+
+### 13. Local-First Exam Readiness
+
+The system **must** run on the student's own PC in Visual Studio.
+
+**Primary deployment target:** Local Windows development environment
+
+**Optional targets:**
+- ✅ GitHub repository for version control
+- ✅ Simply.com hosting (if time permits)
+
+**Rule:** Do not optimize for cloud deployment at the expense of local execution. The exam happens on a local PC.
+
+---
+
+### 14. Understandability
+
+Every group member **must** be able to explain the parts they implemented.
+
+**Guidelines:**
+- ✅ Write readable code with meaningful variable names
+- ✅ Add comments where the intent is not obvious
+- ✅ Keep methods short and focused (< 30 lines)
+- ✅ Avoid clever tricks or one-liners that sacrifice clarity
+- ✅ Use consistent naming conventions
+
+**Rule:** If a group member cannot explain a piece of code during the exam, it should not be in the project.
+
+**Comment strategy:**
+- ✅ Explain *why* something is done (business rules, constraints)
+- ❌ Do not explain *what* the code does (if the code is clear)
+
+**Example:**
+
+```csharp
+// Good: Explains why
+// VIP guests must book at least 7 days in advance per business rules
+if (isVIP && daysUntilShow < 7)
+{
+    throw new InvalidVIPReservationException();
+}
+
+// Bad: Explains what (obvious from code)
+// Check if days until show is less than 7
+if (isVIP && daysUntilShow < 7)
+{
+    throw new InvalidVIPReservationException();
+}
+```
+
+---
+
+## Enforcement
+
+This constitution **must** be enforced during:
+
+1. **Initial project setup** - Use SpecKit with this constitution to generate the correct structure
+2. **Code reviews** - Reject any code that violates these principles
+3. **Sprint planning** - Ensure User Stories align with these constraints
+4. **Exam preparation** - Review the project against this constitution before submission
+
+---
+
+## Amendment Process
+
+This constitution may only be amended if:
+
+1. The assignment requirements change (instructor updates)
+2. A required technology is explicitly added by the instructor
+3. All group members agree on the change
+4. The change is documented with a rationale
+
+---
+
+## Quick Reference Checklist
+
+Before submitting or demoing the project, verify:
+
+### **Project Structure**
+- [ ] Three-project structure (Core, ConsoleApp, Web)
+- [ ] No forbidden technologies (React, Next.js, TypeScript, etc.)
+- [ ] Project runs locally in Visual Studio
+
+### **Architecture**
+- [ ] Business logic is in the Class Library, not in Razor Pages
+- [ ] Clear layer separation (UI, Service, Repository)
+- [ ] In-memory data storage with seed data (no database)
+- [ ] Manual constructor injection (no DI container)
+
+### **Core Functionality**
+- [ ] Console App can demonstrate all core features
+- [ ] Self-written search/filtering algorithm exists
+- [ ] Self-written alphabetical city sorting algorithm exists
+- [ ] Reservation system with capacity checks
+- [ ] VIP validation rules implemented
+- [ ] Custom exceptions for business rules
+
+### **Code Quality**
+- [ ] Code is explainable by all group members
+- [ ] Methods are short and focused (< 30 lines)
+- [ ] Meaningful variable and class names
+- [ ] Comments explain "why", not "what"
+
+### **UI/UX**
+- [ ] UI is clean but realistic for a school project
+- [ ] Danish labels throughout ("Forestillinger", "Reserver billet", etc.)
+- [ ] Bootstrap 5 + custom CSS in wwwroot/css/site.css
+- [ ] Statistics are calculated from real seed data, not hardcoded
+- [ ] Visual design inspired by reference but not overly polished
+- [ ] No marketing-heavy or SaaS-style UI elements
+
+### **Documentation**
+- [ ] UML diagrams focus on Core library (Domain Model, Class Diagram, Sequence Diagram)
+- [ ] Scrum documentation (Product Backlog, User Stories with Acceptance Criteria)
+- [ ] README explains how to run the project
+
+### **Exam Readiness**
+- [ ] Console App demonstrates all features without web UI
+- [ ] Core library contains all exam-relevant code
+- [ ] Every feature can be explained and justified
+
+---
+
+## Summary
+
+This constitution exists to keep the Cirkus Luna project **focused, appropriate, and exam-ready**. When in doubt, prefer simplicity over sophistication, and always prioritize the assignment requirements over modern web development trends.
+
+**The goal is not to build a production-ready system. The goal is to demonstrate 1st semester C# programming skills in a clear, maintainable, and understandable way.**

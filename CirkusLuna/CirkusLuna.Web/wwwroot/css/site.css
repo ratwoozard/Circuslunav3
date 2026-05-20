@@ -1,0 +1,91 @@
+/* Cirkus Luna - Custom CSS */
+/* Color Scheme: Burgundy, Gold, Cream */
+
+:root {
+    --burgundy: #722F37;
+    --gold: #D4AF37;
+    --cream: #FFFDD0;
+    --dark-burgundy: #5C252C;
+}
+
+body {
+    background-color: var(--cream);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+.bg-burgundy {
+    background-color: var(--burgundy) !important;
+}
+
+.navbar-brand {
+    color: var(--gold) !important;
+    font-size: 1.5rem;
+}
+
+.nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.nav-link:hover {
+    color: var(--gold) !important;
+}
+
+.btn-primary {
+    background-color: var(--burgundy);
+    border-color: var(--burgundy);
+}
+
+.btn-primary:hover {
+    background-color: var(--dark-burgundy);
+    border-color: var(--dark-burgundy);
+}
+
+.card {
+    border-color: var(--burgundy);
+}
+
+.card-header {
+    background-color: var(--burgundy);
+    color: white;
+}
+
+.text-gold {
+    color: var(--gold);
+}
+
+.hero-section {
+    background: linear-gradient(135deg, var(--burgundy) 0%, var(--dark-burgundy) 100%);
+    color: white;
+    padding: 3rem 0;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+}
+
+.hero-section h1 {
+    color: var(--gold);
+}
+
+.performance-card {
+    transition: transform 0.2s;
+}
+
+.performance-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.badge-vip {
+    background-color: var(--gold);
+    color: black;
+}
+
+.footer {
+    background-color: #f8f9fa;
+    border-top: 3px solid var(--burgundy);
+}

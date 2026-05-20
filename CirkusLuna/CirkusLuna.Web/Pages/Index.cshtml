@@ -1,0 +1,71 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Forside";
+}
+
+<div class="hero-section text-center">
+    <div class="container">
+        <h1 class="display-4">Velkommen til Cirkus Luna</h1>
+        <p class="lead">Oplev magien - Book din billet i dag!</p>
+        <a asp-page="/Program" class="btn btn-light btn-lg mt-3">Se Forestillinger</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card performance-card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Kommende Forestillinger</h5>
+            </div>
+            <div class="card-body">
+                <p>Vi har @Model.AntalForestillinger kommende forestillinger planlagt.</p>
+                <a asp-page="/Program" class="btn btn-primary">Se alle</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card performance-card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Vores Artister</h5>
+            </div>
+            <div class="card-body">
+                <p>Mød vores talentfulde artister fra hele verden.</p>
+                <a asp-page="/Artister" class="btn btn-primary">Se artister</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card performance-card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Billetpriser</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled">
+                    <li><strong>Normal:</strong> 120 DKK</li>
+                    <li><strong>Barn:</strong> 80 DKK</li>
+                    <li><strong>VIP:</strong> 250 DKK</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model.NaesteForestilling != null)
+{
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5 class="mb-0">Næste Forestilling</h5>
+        </div>
+        <div class="card-body">
+            <h4>@Model.NaesteForestilling.Titel</h4>
+            <p>
+                <strong>Dato:</strong> @Model.NaesteForestilling.Dato.ToString("d. MMMM yyyy")<br/>
+                <strong>Tidspunkt:</strong> @Model.NaesteForestilling.Tidspunkt.ToString(@"hh\:mm")<br/>
+                <strong>By:</strong> @Model.NaesteForestilling.By?.Navn<br/>
+                <strong>Ledige pladser:</strong> @Model.NaesteForestilling.LedigePladser af @Model.NaesteForestilling.TotalKapacitet
+            </p>
+            <a asp-page="/Reserver" asp-route-id="@Model.NaesteForestilling.Id" class="btn btn-primary">Reserver billetter</a>
+        </div>
+    </div>
+}

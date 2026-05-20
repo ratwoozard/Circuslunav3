@@ -1,0 +1,80 @@
+@page "{id:int}"
+@model DetaljerModel
+@{
+    ViewData["Title"] = Model.Forestilling?.Titel ?? "Detaljer";
+}
+
+@if (Model.Forestilling == null)
+{
+    <div class="alert alert-danger">Forestilling ikke fundet.</div>
+}
+else
+{
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-page="/Program">Forestillinger</a></li>
+            <li class="breadcrumb-item active">@Model.Forestilling.Titel</li>
+        </ol>
+    </nav>
+
+    <div class="card">
+        <div class="card-header">
+            <h2 class="mb-0">@Model.Forestilling.Titel</h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Information</h5>
+                    <table class="table">
+                        <tr>
+                            <th>Dato</th>
+                            <td>@Model.Forestilling.Dato.ToString("dddd d. MMMM yyyy")</td>
+                        </tr>
+                        <tr>
+                            <th>Tidspunkt</th>
+                            <td>@Model.Forestilling.Tidspunkt.ToString(@"hh\:mm")</td>
+                        </tr>
+                        <tr>
+                            <th>By</th>
+                            <td>@Model.Forestilling.By?.Navn (@Model.Forestilling.By?.Region)</td>
+                        </tr>
+                        <tr>
+                            <th>Kapacitet</th>
+                            <td>@Model.Forestilling.TotalKapacitet pladser</td>
+                        </tr>
+                        <tr>
+                            <th>Ledige pladser</th>
+                            <td>
+                                <span class="badge bg-success">@Model.Forestilling.LedigePladser normal</span>
+                                <span class="badge badge-vip">@Model.Forestilling.LedigeVIPPladser VIP</span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-md-6">
+                    <h5>Artister</h5>
+                    @if (Model.Forestilling.Artister?.Count > 0)
+                    {
+                        <ul class="list-group">
+                            @foreach (var artist in Model.Forestilling.Artister)
+                            {
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    @artist.Navn
+                                    <span class="badge bg-burgundy">@artist.Specialitet</span>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="text-muted">Ingen artister tildelt endnu.</p>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <a asp-page="/Reserver" asp-route-id="@Model.Forestilling.Id" class="btn btn-primary">Reserver billetter</a>
+            <a asp-page="/Program" class="btn btn-outline-secondary">Tilbage</a>
+        </div>
+    </div>
+}
